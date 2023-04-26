@@ -1,3 +1,92 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>XRPL Ledger - Ripple Carbon Free Clean Air</title>
+	<style>
+		body {
+			background-image: url('sC:\Users\nadin\Desktop\Seedling.jpg);
+			background-size: cover;
+			background-position: center;
+			font-family: Arial, Helvetica, sans-serif;
+			color: #fff;
+		}
+		h1 {
+			font-size: 48px;
+			text-align: center;
+			margin-top: 100px;
+			margin-bottom: 50px;
+			text-shadow: 2px 2px 4px #000000;
+		}
+		form {
+			width: 50%;
+			margin: 0 auto;
+			background-color: rgba(255, 255, 255, 0.8);
+			padding: 30px;
+			border-radius: 10px;
+			box-shadow: 2px 2px 4px #000000;
+		}
+		input[type="checkbox"] {
+			margin-right: 10px;
+		}
+		input[type="submit"] {
+			width: 100%;
+			background-color: #4CAF50;
+			color: #fff;
+			padding: 10px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			margin-top: 10px;
+		}
+		input[type="submit"]:hover {
+			background-color: #3e8e41;
+		}
+	</style>
+</head>
+<body>
+	<h1>Ripple Carbon Free Clean Air</h1>
+	<form>
+		<label>Order a seedling or seeds to send a friend or client:</label>
+		<br>
+		<label><input type="checkbox" name="item1" value="seedling">Tree Seedling</label>
+		<label><input type="checkbox" name="item2" value="seeds">Fruit Tree Seeds</label>
+		<br><br>
+		<label>Name and address of the recipient:</label>
+		<br>
+		<input type="text" name="name" placeholder="Name" required>
+		<input type="text" name="address" placeholder="Address" required>
+		<br><br>
+		<label>Total Cost: $<span id="cost">0.00</span></label>
+		<br>
+		<label>Pay with:</label>
+		<br>
+		<input type="text" name="xumm-wallet" placeholder="Xumm Wallet">
+		<input type="text" name="xrp-address" placeholder="XRP Address">
+		<br><br>
+		<input type="submit" value="Checkout">
+	</form>
+
+	<script>
+		// calculate total cost
+		var cost = 0;
+		var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+		for (var i = 0; i < checkboxes.length; i++) {
+			checkboxes[i].addEventListener('change', function() {
+				if (this.checked) {
+					cost += 10.00;
+				} else {
+					cost -= 10.00;
+				}
+				document.getElementById('cost').innerHTML = cost.toFixed(2);
+			});
+		}
+	</script>
+</body>
+</html>
+```
+
+
 ```python
 import requests
 
