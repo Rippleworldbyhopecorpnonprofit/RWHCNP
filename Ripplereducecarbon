@@ -1,0 +1,108 @@
+```python
+import requests
+
+class Store:
+    def __init__(self, name, address):
+        self.name = name
+        self.address = address
+        self.products = []
+        self.orders = []
+        
+    def add_product(self, product):
+        self.products.append(product)
+        
+    def remove_product(self, product):
+        self.products.remove(product)
+        
+    def process_order(self, order):
+        self.orders.append(order)
+        # send the order to the shipping company
+        self.ship_order(order)
+        
+    def ship_order(self, order):
+        # send the order details to the shipping company
+        url = "https://shippingcompany.com/api/create_order"
+        data = {
+            "name": order.customer_name,
+            "address": order.customer_address,
+            "product": order.product.name,
+            "status": "Mailed"
+        }
+        response = requests.post(url, data=data)
+        order.tracking_number = response.json()["tracking_number"]
+        
+    def track_order(self, order):
+        # check the status of the order from the shipping company
+        url = "https://shippingcompany.com/api/track_order"
+        data = {
+            "tracking_number": order.tracking_number
+        }
+        response = requests.get(url, params=data)
+        order.status = response.json()["status"]
+
+class Product:
+    def __init__(self, name, price, type):
+        self.name = name
+        self.price = price
+        self.type = type
+        
+class Order:
+    def __init__(self, customer_name, customer_address, product):
+        self.customer_name = customer_name
+        self.customer_address = customer_address
+        self.product = product
+        self.tracking_number = None
+        self.status = "Pending"
+        
+    def __str__(self):
+        return f"{self.product.name} order for {self.customer_name}"
+        
+class Chatbot:
+    def __init__(self):
+        self.commands = {}
+        
+    def add_command(self, command, response):
+        self.commands[command] = response
+        
+    def respond(self, message):
+        for command in self.commands:
+            if command in message.lower():
+                return self.commands[command]
+        return "Sorry, I don't understand."
+        
+store = Store("Tree Seedlings Store", "123 Main Street")
+
+tree_seeds = Product("Tree Seedlings", 10, "Tree")
+fruit_seeds = Product("Fruit Tree Seedlings", 15, "Fruit Tree")
+
+store.add_product(tree_seeds)
+store.add_product(fruit_seeds)
+
+chatbot = Chatbot()
+chatbot.add_command("status", "Your order is currently {order.status}")
+chatbot.add_command("help", "Please type 'status' to check the status of your order.")
+
+while True:
+    print("Welcome to the Tree Seedlings Store!")
+    print("Please select a product:")
+    for i, product in enumerate(store.products):
+        print(f"{i+1}. {product.name} - {product.price} XRP ({product.type})")
+    choice = input("Enter the product number: ")
+    try:
+        product = store.products[int(choice)-1]
+    except:
+        print("Invalid choice. Please try again.")
+        continue
+    print(f"You have selected {product.name} for {product.price} XRP.")
+    name = input("Please enter your name: ")
+    address = input("Please enter your mailing address: ")
+    order = Order(name, address, product)
+    store.process_order(order)
+    print(f"Your order for {product.name} has been processed. Your tracking number is {order.tracking_number}.")
+    while order.status != "Delivered":
+        message = input("Please type 'status' to check the status of your order or 'help' for assistance from our chatbot: ")
+        if message.lower() == "quit":
+            break
+        response = chatbot.respond(message)
+        print(response)
+
